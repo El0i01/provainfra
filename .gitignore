@@ -1,0 +1,29 @@
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
+# Dependências
+node_modules/
+venv/
+__pycache__/
+*.pyc
+
+# Ambiente
+.env
+.env.local
+
+# Build
+dist/
+build/
+*.tar.gz
