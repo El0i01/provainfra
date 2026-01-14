@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  # Serviço do Banco (Simulando a Camada Privada)
+  banco:
+    image: postgres:14
+    container_name: banco-prova
+    environment:
+      POSTGRES_PASSWORD: infra123
+      POSTGRES_DB: meusistema
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: always
+    networks:
+      - internal-net
+
+  # Serviço da Aplicação (Simulando a Camada Pública)
+  app:
+    image: node:18
+    container_name: app-prova
+    working_dir: /usr/src/app
+    # Em produção usamos PM2, aqui simulamos o start direto
+    command: "node index.js"
+    environment:
+      DB_HOST: banco-prova # Nome do serviço acima
+      DB_PASS: infra123
+    ports:
+      - "3000:3000"
+    depends_on:
+      - banco
+    networks:
+      - public-net
+      - internal-net
+
+volumes:
+  pgdata:
+
+networks:
+  internal-net:
+  public-net:

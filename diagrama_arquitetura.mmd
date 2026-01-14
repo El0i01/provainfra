@@ -1,0 +1,21 @@
+graph TD
+    User((Usuário Internet)) -->|HTTPS| Cloudflare
+    Cloudflare -->|HTTP| IGW[Internet Gateway]
+    
+    subgraph VPC [AWS VPC 10.0.0.0/16]
+        IGW --> PublicSubnet
+        
+        subgraph PublicSubnet [Subnet Pública]
+            Nginx[EC2 Proxy / Nginx]
+            App[Node.js App / PM2]
+            Nginx -->|Port 3000| App
+            Nat[NAT Masquerade]
+        end
+        
+        App -->|TCP 5432| DB
+        Nat -.->|Internet p/ Updates| DB
+        
+        subgraph PrivateSubnet [Subnet Privada]
+            DB[(PostgreSQL Docker)]
+        end
+    end
